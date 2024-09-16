@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 20,
+    flexWrap: 'wrap',
   },
   button: {
     paddingHorizontal: 20,

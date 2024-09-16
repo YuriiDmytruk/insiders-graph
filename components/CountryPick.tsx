@@ -12,12 +12,12 @@ const CountryPick = () => {
   const _country = useSelector((state: RootState) => state.covidData.country);
   const [currentCountry, setCurrentCountry] = useState<Country>(_country);
   const [countryCode, setCountryCode] = useState<CountryCode>(_country.cca2);
-  const [pickerVisible, setPickerVisible] = useState(false); // State for picker visibility
+  const [pickerVisible, setPickerVisible] = useState(false);
 
   const onSelect = (value: Country) => {
     setCountryCode(value.cca2);
     setCurrentCountry(value);
-    setPickerVisible(false); // Hide picker after selection
+    setPickerVisible(false);
   };
 
   const { data, isFetching } = useGetCovidDataByCountryQuery(currentCountry.name.toString().toLocaleLowerCase());
@@ -54,7 +54,7 @@ const CountryPick = () => {
         withEmoji={true}
         onSelect={onSelect}
         visible={pickerVisible}
-        onClose={() => setPickerVisible(false)} // Close picker on outside click or pressing close
+        onClose={() => setPickerVisible(false)}
       />
     </View>
   );
