@@ -6,10 +6,12 @@ import {RootState} from '../redux/store';
 import Loading from '../components/Loading';
 import NoData from '../components/NoData';
 import {CovidData} from '../redux/types';
+import Info from '../components/Info';
 
 type pieDataItem = {
   value: number;
   text: string;
+  onPress: (label: string, value: number) => void;
 };
 
 const PieChartComponent = () => {
@@ -18,19 +20,37 @@ const PieChartComponent = () => {
 
   const [filter, setFilter] = useState<'new' | 'total'>('total');
 
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [modalData, setModalData] = useState<{label: string; value: number}>({
+    label: '',
+    value: 0,
+  });
+
+  const handleItemPress = (label: string, value: number): void => {
+    setModalData({
+      label,
+      value,
+    });
+    setOpenModal(true);
+  };
+
   useEffect(() => {
     const prepareData = (): pieDataItem[] => {
-      return data.map((element: CovidData) => ({
-        text: element.region,
-        value:
+      return data.map((element: CovidData) => {
+        const value =
           element.region === ''
             ? 0
             : element.cases.reduce(
                 (accumulator, currentValue) =>
                   accumulator + currentValue[filter],
                 0,
-              ),
-      }));
+              );
+        return {
+          text: element.region,
+          value: value,
+          onPress: () => handleItemPress(element.region, value),
+        };
+      });
     };
 
     if (data[0]?.cases) {
@@ -40,11 +60,23 @@ const PieChartComponent = () => {
 
   return (
     <View style={styles.container}>
+      {openModal && (
+        <Info
+          close={() => {
+            setOpenModal(false);
+          }}
+          {...modalData}
+        />
+      )}
       {isFetching ? (
         <Loading />
       ) : data[0]?.cases ? (
         <View style={styles.chart_container}>
-          <PieChart data={chartData} labelsPosition="onBorder" showText={true} />
+          <PieChart
+            data={chartData}
+            labelsPosition="onBorder"
+            showText={true}
+          />
           <View style={styles.button_container}>
             <TouchableOpacity
               style={styles.button}
@@ -71,7 +103,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingTop: 30,
   },
-  chart_container:{
+  chart_container: {
     width: '100%',
     alignItems: 'center',
   },

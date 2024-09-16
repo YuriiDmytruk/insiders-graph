@@ -7,10 +7,12 @@ import {Case, CovidData} from '../redux/types';
 import NoData from '../components/NoData';
 import Loading from '../components/Loading';
 import {ScrollView} from 'react-native-gesture-handler';
+import Info from '../components/Info';
 
 type lineDataItem = {
   value: number;
   label: string;
+  onPress: (label: string, value: number) => void;
 };
 
 const LineChartComponent = () => {
@@ -19,6 +21,20 @@ const LineChartComponent = () => {
 
   const [dataTotal, setDataTotal] = useState<lineDataItem[]>([]);
   const [dataNew, setDataNew] = useState<lineDataItem[]>([]);
+
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [modalData, setModalData] = useState<{label: string; value: number}>({
+    label: '',
+    value: 0,
+  });
+
+  const handleItemPress = (label: string, value: number): void => {
+    setModalData({
+      label,
+      value,
+    });
+    setOpenModal(true);
+  };
 
   const setRegion = (region: string) => {
     console.log(region);
@@ -32,6 +48,7 @@ const LineChartComponent = () => {
       return data[regionIndex].cases.map((element: Case) => ({
         value: element.total,
         label: element.date,
+        onPress: () => handleItemPress(element.date, element.total),
       }));
     };
 
@@ -39,6 +56,7 @@ const LineChartComponent = () => {
       return data[regionIndex].cases.map((element: Case) => ({
         value: element.new,
         label: element.date,
+        onPress: () => handleItemPress(element.date, element.new),
       }));
     };
     if (data[regionIndex]?.cases) {
@@ -49,16 +67,24 @@ const LineChartComponent = () => {
 
   return (
     <ScrollView style={styles.container}>
+      {openModal && (
+        <Info
+          close={() => {
+            setOpenModal(false);
+          }}
+          {...modalData}
+        />
+      )}
       {isFetching ? (
         <Loading />
       ) : data[0]?.cases ? (
         <View>
-          <LineChart data={dataTotal} data2={dataNew} />
+          <LineChart data={dataTotal} data2={dataNew} spacing={10} />
           <View style={styles.button_container}>
             {data.length > 0 &&
               data.map((element: CovidData) => (
                 <TouchableOpacity
-                  key={element.region} // Added key prop for list rendering
+                  key={element.region}
                   style={styles.button}
                   onPress={() => setRegion(element.region)}>
                   <Text style={styles.button_text}>

@@ -6,13 +6,15 @@ import {RootState} from '../redux/store';
 import Loading from '../components/Loading';
 import NoData from '../components/NoData';
 import {Case, CovidData} from '../redux/types';
+import Info from '../components/Info';
 
 type barDataItem = {
   value: number;
   label: string;
+  onPress: (label: string, value: number) => void;
 };
 
-const defaultData: barDataItem[] = [{value: 0.0001, label: ''}];
+const defaultData: barDataItem[] = [{ value: 0.0001, label: '', onPress: () => {} }];
 
 const BarChartComponent = () => {
   const {data, isFetching} = useSelector((state: RootState) => state.covidData);
@@ -20,6 +22,19 @@ const BarChartComponent = () => {
 
   const [filterData, setFilterData] = useState<'new' | 'total'>('total');
   const [filterType, setFilterType] = useState<'days' | 'region'>('region');
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [modalData, setModalData] = useState<{label: string; value: number}>({
+    label: '',
+    value: 0,
+  });
+
+  const handleItemPress = (label: string, value: number): void => {
+    setModalData({
+      label,
+      value,
+    });
+    setOpenModal(true);
+  };
 
   useEffect(() => {
     const prepareData = (): barDataItem[] => {
@@ -29,10 +44,12 @@ const BarChartComponent = () => {
         );
         if (allIndex !== -1) {
           const chartItems = data[allIndex].cases.map((element: Case) => {
-            const value = filterData === 'total' ? element.total : element.new;
+            let value = filterData === 'total' ? element.total : element.new;
+            value = isNaN(value) ? defaultData[0].value : value;
             return {
-              value: isNaN(value) ? defaultData[0].value : value,
+              value: value,
               label: element.date,
+              onPress: () => handleItemPress(element.date, value),
             };
           });
           return chartItems;
@@ -40,16 +57,17 @@ const BarChartComponent = () => {
       }
       if (filterType === 'region') {
         return data.map((element: CovidData) => {
+          const value = element.region === ''
+            ? defaultData[0].value
+            : element.cases.reduce(
+                (accumulator, currentValue) =>
+                  accumulator + currentValue[filterData],
+                0,
+              );
           return {
             label: element.region,
-            value:
-              element.region === ''
-                ? defaultData[0].value
-                : element.cases.reduce(
-                    (accumulator, currentValue) =>
-                      accumulator + currentValue[filterData],
-                    0,
-                  ),
+            value: value,
+            onPress: () => handleItemPress(element.region, value),
           };
         });
       }
@@ -63,6 +81,14 @@ const BarChartComponent = () => {
 
   return (
     <View style={styles.container}>
+      {openModal && (
+        <Info
+          close={() => {
+            setOpenModal(false);
+          }}
+          {...modalData}
+        />
+      )}
       {isFetching ? (
         <Loading />
       ) : data[0]?.cases ? (
