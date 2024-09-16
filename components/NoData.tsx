@@ -1,12 +1,10 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import {Text, View} from 'react-native';
 
 const NoData = () => {
   return (
     <View>
-        <Text>
-            No Data
-        </Text>
+      <Text>No Data</Text>
     </View>
   );
 };

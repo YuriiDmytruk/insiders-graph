@@ -1,5 +1,5 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { covidApi } from './covidApi';
+import {configureStore} from '@reduxjs/toolkit';
+import {covidApi} from './covidApi';
 import covidData from './slices/covidData';
 
 export const store = configureStore({
@@ -7,7 +7,7 @@ export const store = configureStore({
     covidData: covidData,
     [covidApi.reducerPath]: covidApi.reducer,
   },
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: false,
     }).concat(covidApi.middleware),

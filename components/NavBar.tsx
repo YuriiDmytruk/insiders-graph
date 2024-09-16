@@ -6,7 +6,6 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import CountryPick from './CountryPick';
 
 const NavBar: React.FC<StackHeaderProps> = ({navigation}) => {
-
   const [activeScreen, setActiveScreen] = useState<string>('');
 
   useEffect(() => {

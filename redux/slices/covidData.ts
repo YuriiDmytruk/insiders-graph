@@ -1,12 +1,12 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CovidData } from '../types';
-import { Country, defaultCountry } from '../../types/country-types';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {CovidData} from '../types';
+import {Country, defaultCountry} from '../../types/country-types';
 
 type CovidDataType = {
   data: CovidData[];
   country: Country;
   isFetching: boolean;
-}
+};
 
 const initialState: CovidDataType = {
   data: [],
@@ -30,10 +30,6 @@ const covidData = createSlice({
   },
 });
 
-export const {
-  updateData,
-  updateCountry,
-  updateStatus,
-} = covidData.actions;
+export const {updateData, updateCountry, updateStatus} = covidData.actions;
 
 export default covidData.reducer;

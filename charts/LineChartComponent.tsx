@@ -37,7 +37,6 @@ const LineChartComponent = () => {
   };
 
   const setRegion = (region: string) => {
-    console.log(region);
     setRegionIndex(
       data.findIndex((element: CovidData) => element.region === region),
     );

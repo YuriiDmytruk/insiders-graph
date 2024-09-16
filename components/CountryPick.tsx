@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, View} from 'react-native';
 import CountryPicker from 'react-native-country-picker-modal';
-import { Country, CountryCode } from '../types/country-types';
-import { useDispatch, useSelector } from 'react-redux';
-import { useGetCovidDataByCountryQuery } from '../redux/covidApi';
-import { updateCountry, updateData, updateStatus } from '../redux/slices/covidData';
-import { CovidData, CovidDataQuery } from '../redux/types';
-import { RootState } from '../redux/store';
+import {Country, CountryCode} from '../types/country-types';
+import {useDispatch, useSelector} from 'react-redux';
+import {useGetCovidDataByCountryQuery} from '../redux/covidApi';
+import {
+  updateCountry,
+  updateData,
+  updateStatus,
+} from '../redux/slices/covidData';
+import {CovidData, CovidDataQuery} from '../redux/types';
+import {RootState} from '../redux/store';
 
 const CountryPick = () => {
   const _country = useSelector((state: RootState) => state.covidData.country);
@@ -20,11 +24,13 @@ const CountryPick = () => {
     setPickerVisible(false);
   };
 
-  const { data, isFetching } = useGetCovidDataByCountryQuery(currentCountry.name.toString().toLocaleLowerCase());
+  const {data, isFetching} = useGetCovidDataByCountryQuery(
+    currentCountry.name.toString().toLocaleLowerCase(),
+  );
   const dispatch = useDispatch();
 
   const mapCasesToArray = (_data: CovidDataQuery[]): CovidData[] => {
-    return _data.map(({ country, region, cases }) => ({
+    return _data.map(({country, region, cases}) => ({
       country,
       region,
       cases: Object.entries(cases).map(([date, caseData]) => ({
