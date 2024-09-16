@@ -25,6 +25,11 @@ const NavBar: React.FC<StackHeaderProps> = ({navigation}) => {
             onPress={() => handleNavigate('PieChart')}>
             <Text style={styles.button_text}>PieChart</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleNavigate('BarChart')}>
+            <Text style={styles.button_text}>BarChart</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

@@ -8,6 +8,7 @@ import NavBar from './components/NavBar';
 import LineChartComponent from './charts/LineChartComponent';
 import PieChartComponent from './charts/PieChartComponent';
 import { RootStackParamList } from './types/navigation-types';
+import BarChartComponent from './charts/BarChartComponent';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -23,6 +24,7 @@ function App(): React.JSX.Element {
         >
           <Stack.Screen name="LineChart" component={LineChartComponent}/>
           <Stack.Screen name="PieChart" component={PieChartComponent} />
+          <Stack.Screen name="BarChart" component={BarChartComponent} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
