@@ -1,4 +1,4 @@
-export type CovidData = {
+export type CovidDataQuery = {
   country: string;
   region: string;
   cases: Record<
@@ -7,7 +7,19 @@ export type CovidData = {
       total: number;
       new: number;
     }
-  >[];
+  >;
+};
+
+export type CovidData = {
+  country: string;
+  region: string;
+  cases: Case[];
+};
+
+export type Case = {
+  date: string;
+  total: number;
+  new: number;
 };
 
 export type CovidQueryParams = {

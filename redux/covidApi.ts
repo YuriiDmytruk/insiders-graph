@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { CovidData } from './types';
+import { CovidDataQuery } from './types';
 
 export const covidApi = createApi({
   reducerPath: 'covidApi',
@@ -11,7 +11,7 @@ export const covidApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getCovidDataByCountry: builder.query<CovidData[], string>({
+    getCovidDataByCountry: builder.query<CovidDataQuery[], string>({
       query: (country) => ({
         url: '/v1/covid19',
         params: {

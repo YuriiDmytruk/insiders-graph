@@ -19,6 +19,7 @@ const covidData = createSlice({
   initialState,
   reducers: {
     updateData: (state, action: PayloadAction<CovidData[]>) => {
+      console.log(action.payload[0].cases);
       state.data = action.payload;
     },
     updateCountry: (state, action: PayloadAction<Country>) => {

@@ -5,28 +5,40 @@ import {Country, CountryCode, defaultCountry} from '../country-types';
 import {useDispatch} from 'react-redux';
 import {useGetCovidDataByCountryQuery} from '../redux/covidApi';
 import { updateCountry, updateData, updateStatus } from '../redux/slices/covidData';
+import { CovidData, CovidDataQuery } from '../redux/types';
 
 const CountryPick = () => {
-  const [country, setCountry] = useState<Country>(defaultCountry);
+  const [currentCountry, setCurrentCountry] = useState<Country>(defaultCountry);
   const [countryCode, setCountryCode] = useState<CountryCode>(defaultCountry.cca2);
 
   const onSelect = (value: Country) => {
     setCountryCode(value.cca2);
-    setCountry(value);
+    setCurrentCountry(value);
   };
 
-  const { data, isFetching } = useGetCovidDataByCountryQuery(country.name.toString().toLocaleLowerCase());
+  const { data, isFetching } = useGetCovidDataByCountryQuery(currentCountry.name.toString().toLocaleLowerCase());
 
 
   const dispatch = useDispatch();
 
+  const mapCasesToArray = (_data: CovidDataQuery[]): CovidData[] => {
+    return _data.map(({ country, region, cases }) => ({
+      country,
+      region,
+      cases: Object.entries(cases).map(([date, caseData]) => ({
+        date,
+        ...caseData,
+      })),
+    }));
+  };
+
   useEffect(() => {
     dispatch(updateStatus(isFetching));
     if(data){
-      dispatch(updateCountry(country));
-      dispatch(updateData(data));
+      dispatch(updateCountry(currentCountry));
+      dispatch(updateData(mapCasesToArray(data)));
     }
-  }, [data, isFetching, country, dispatch]);
+  }, [data, isFetching, currentCountry, dispatch]);
 
   return (
     <View style={styles.container}>
