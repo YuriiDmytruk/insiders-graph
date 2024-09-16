@@ -14,7 +14,9 @@ type barDataItem = {
   onPress: (label: string, value: number) => void;
 };
 
-const defaultData: barDataItem[] = [{ value: 0.0001, label: '', onPress: () => {} }];
+const defaultData: barDataItem[] = [
+  {value: 0.0001, label: '', onPress: () => {}},
+];
 
 const BarChartComponent = () => {
   const {data, isFetching} = useSelector((state: RootState) => state.covidData);
@@ -57,13 +59,14 @@ const BarChartComponent = () => {
       }
       if (filterType === 'region') {
         return data.map((element: CovidData) => {
-          const value = element.region === ''
-            ? defaultData[0].value
-            : element.cases.reduce(
-                (accumulator, currentValue) =>
-                  accumulator + currentValue[filterData],
-                0,
-              );
+          const value =
+            element.region === ''
+              ? defaultData[0].value
+              : element.cases.reduce(
+                  (accumulator, currentValue) =>
+                    accumulator + currentValue[filterData],
+                  0,
+                );
           return {
             label: element.region,
             value: value,
@@ -96,26 +99,70 @@ const BarChartComponent = () => {
           <BarChart data={chartData} />
           <View style={styles.button_container}>
             <TouchableOpacity
-              style={styles.button}
+              style={
+                filterData === 'total'
+                  ? [styles.button, styles.active_button]
+                  : styles.button
+              }
               onPress={() => setFilterData('total')}>
-              <Text style={styles.button_text}>Total</Text>
+              <Text
+                style={
+                  filterData === 'total'
+                    ? [styles.button_text, styles.active_button_text]
+                    : styles.button_text
+                }>
+                Total
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.button}
+              style={
+                filterData === 'new'
+                  ? [styles.button, styles.active_button]
+                  : styles.button
+              }
               onPress={() => setFilterData('new')}>
-              <Text style={styles.button_text}>New</Text>
+              <Text
+                style={
+                  filterData === 'new'
+                    ? [styles.button_text, styles.active_button_text]
+                    : styles.button_text
+                }>
+                New
+              </Text>
             </TouchableOpacity>
           </View>
           <View style={styles.button_container}>
             <TouchableOpacity
-              style={styles.button}
+              style={
+                filterType === 'region'
+                  ? [styles.button, styles.active_button]
+                  : styles.button
+              }
               onPress={() => setFilterType('region')}>
-              <Text style={styles.button_text}>Regions</Text>
+              <Text
+                style={
+                  filterType === 'region'
+                    ? [styles.button_text, styles.active_button_text]
+                    : styles.button_text
+                }>
+                Regions
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.button}
+              style={
+                filterType === 'days'
+                  ? [styles.button, styles.active_button]
+                  : styles.button
+              }
               onPress={() => setFilterType('days')}>
-              <Text style={styles.button_text}>Days</Text>
+              <Text
+                style={
+                  filterType === 'days'
+                    ? [styles.button_text, styles.active_button_text]
+                    : styles.button_text
+                }>
+                Days
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -153,6 +200,12 @@ const styles = StyleSheet.create({
   button_text: {
     fontSize: 15,
     color: '#2525f5',
+  },
+  active_button_text: {
+    color: '#FFF',
+  },
+  active_button: {
+    backgroundColor: '#2525f5',
   },
 });
 

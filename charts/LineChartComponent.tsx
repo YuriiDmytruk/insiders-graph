@@ -85,9 +85,18 @@ const LineChartComponent = () => {
               data.map((element: CovidData) => (
                 <TouchableOpacity
                   key={element.region}
-                  style={styles.button}
+                  style={
+                    data[regionIndex].region === element.region
+                      ? [styles.button, styles.active_button]
+                      : styles.button
+                  }
                   onPress={() => setRegion(element.region)}>
-                  <Text style={styles.button_text}>
+                  <Text
+                    style={
+                      data[regionIndex].region === element.region
+                        ? [styles.button_text, styles.active_button_text]
+                        : styles.button_text
+                    }>
                     {element.region === '' ? 'All' : element.region}
                   </Text>
                 </TouchableOpacity>
@@ -123,6 +132,12 @@ const styles = StyleSheet.create({
   button_text: {
     fontSize: 15,
     color: '#2525f5',
+  },
+  active_button_text: {
+    color: '#FFF',
+  },
+  active_button: {
+    backgroundColor: '#2525f5',
   },
 });
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import {RootStackParamList} from '../types/navigation-types'; // Adjust the path as needed
 import {StackHeaderProps} from '@react-navigation/stack';
@@ -6,8 +6,25 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import CountryPick from './CountryPick';
 
 const NavBar: React.FC<StackHeaderProps> = ({navigation}) => {
+
+  const [activeScreen, setActiveScreen] = useState<string>('');
+
+  useEffect(() => {
+    const getCurrentScreen = () => {
+      const state = navigation.getState();
+      const activeRoute = state.routes[state.index];
+      setActiveScreen(activeRoute.name);
+    };
+    getCurrentScreen();
+    const unsubscribe = navigation.addListener('state', getCurrentScreen);
+    return () => {
+      unsubscribe();
+    };
+  }, [navigation]);
+
   const handleNavigate = (screen: keyof RootStackParamList) => {
     navigation.navigate(screen);
+    setActiveScreen(screen);
   };
 
   return (
@@ -16,19 +33,52 @@ const NavBar: React.FC<StackHeaderProps> = ({navigation}) => {
         <CountryPick />
         <View style={styles.button_container}>
           <TouchableOpacity
-            style={styles.button}
+            style={
+              activeScreen === 'LineChart'
+                ? [styles.button, styles.active_button]
+                : styles.button
+            }
             onPress={() => handleNavigate('LineChart')}>
-            <Text style={styles.button_text}>LineChart</Text>
+            <Text
+              style={
+                activeScreen === 'LineChart'
+                  ? [styles.button_text, styles.active_button_text]
+                  : styles.button_text
+              }>
+              LineChart
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.button}
+            style={
+              activeScreen === 'PieChart'
+                ? [styles.button, styles.active_button]
+                : styles.button
+            }
             onPress={() => handleNavigate('PieChart')}>
-            <Text style={styles.button_text}>PieChart</Text>
+            <Text
+              style={
+                activeScreen === 'PieChart'
+                  ? [styles.button_text, styles.active_button_text]
+                  : styles.button_text
+              }>
+              PieChart
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.button}
+            style={
+              activeScreen === 'BarChart'
+                ? [styles.button, styles.active_button]
+                : styles.button
+            }
             onPress={() => handleNavigate('BarChart')}>
-            <Text style={styles.button_text}>BarChart</Text>
+            <Text
+              style={
+                activeScreen === 'BarChart'
+                  ? [styles.button_text, styles.active_button_text]
+                  : styles.button_text
+              }>
+              BarChart
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -55,9 +105,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
   },
+  active_button: {
+    backgroundColor: '#2525f5',
+  },
   button_text: {
     fontSize: 20,
     color: '#2525f5',
+  },
+  active_button_text: {
+    color: '#FFF',
   },
 });
 
