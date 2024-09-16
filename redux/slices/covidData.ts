@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CovidData } from '../types';
-import { Country, defaultCountry } from '../../country-types';
+import { Country, defaultCountry } from '../../types/country-types';
 
 type CovidDataType = {
   data: CovidData[];
@@ -19,7 +19,6 @@ const covidData = createSlice({
   initialState,
   reducers: {
     updateData: (state, action: PayloadAction<CovidData[]>) => {
-      console.log(action.payload[0].cases);
       state.data = action.payload;
     },
     updateCountry: (state, action: PayloadAction<Country>) => {
