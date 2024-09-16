@@ -18,6 +18,7 @@ function App(): React.JSX.Element {
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={{
+            // eslint-disable-next-line react/no-unstable-nested-components
             header: props => <NavBar {...props} />,
           }}>
           <Stack.Screen name="LineChart" component={LineChartComponent} />
